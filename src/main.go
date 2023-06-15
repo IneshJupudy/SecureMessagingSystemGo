@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 )
 
 func main() {
@@ -21,7 +22,26 @@ func main() {
 	encryptedSharedKey := generateAndEncryptSharedKey(publicKeyBytes)
 	sharedKey := decryptSharedKey(encryptedSharedKey, privateKey)
 
-	myString := string(sharedKey)
-	fmt.Printf(myString)
+	SharedKeyString := string(sharedKey)
+	fmt.Println(SharedKeyString)
+
+	sampleMesage := "Hi, There!"
+	sampleMessageByteSequence := []byte(sampleMesage)
+	
+	//encrypt original message with shared key
+	encryptedMessage, err := encryptMessage(sampleMessageByteSequence, sharedKey)
+	if err != nil{
+		log.Fatal(err)
+	}
+
+	//decrypt original message with shared key
+	decryptedMessage, err := decryptMessage(encryptedMessage, sharedKey)
+	if err != nil{
+		log.Fatal(err)
+	}
+
+	decryptedMessageString := string(decryptedMessage)
+	fmt.Println(sampleMesage)
+	fmt.Println(decryptedMessageString)
 
 }
