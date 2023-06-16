@@ -1,47 +1,27 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	"os"
+	"sync"
 )
 
 func main() {
 
-	var senderId string 
-	var receiverId string 
+	senderId := os.Args[1]		//sender's Id
+	senderPort := os.Args[2]	//sender's port to listen and serve
+	receiverPort := os.Args[3]	//receiver's port to listen and serve
 
-	//Get sender's ID
-	fmt.Printf("Enter sender ID: ")
-	fmt.Scan(&senderId)
+	decryptionContext := &DecryptionContext{}
+	decryptionContext.cond = sync.NewCond(&decryptionContext.mu)
 
-	//Get receiver's ID
-	fmt.Printf("Enter receiver's ID: ")
-	fmt.Scan(&receiverId)
+	var wg sync.WaitGroup
+	wg.Add(1)
 
-	privateKey, publicKeyBytes := generateRSAKeyPair()
-	encryptedSharedKey := generateAndEncryptSharedKey(publicKeyBytes)
-	sharedKey := decryptSharedKey(encryptedSharedKey, privateKey)
+	//accept user input
+	go acceptUserInput(&wg ,receiverPort, decryptionContext, senderId)
 
-	SharedKeyString := string(sharedKey)
-	fmt.Println(SharedKeyString)
+	//Start HTTP server and listen for messages
+	go listenAndServe(senderPort, receiverPort, decryptionContext, senderId)
 
-	sampleMesage := "Hi, There!"
-	sampleMessageByteSequence := []byte(sampleMesage)
-	
-	//encrypt original message with shared key
-	encryptedMessage, err := encryptMessage(sampleMessageByteSequence, sharedKey)
-	if err != nil{
-		log.Fatal(err)
-	}
-
-	//decrypt original message with shared key
-	decryptedMessage, err := decryptMessage(encryptedMessage, sharedKey)
-	if err != nil{
-		log.Fatal(err)
-	}
-
-	decryptedMessageString := string(decryptedMessage)
-	fmt.Println(sampleMesage)
-	fmt.Println(decryptedMessageString)
-
+	wg.Wait()
 }
