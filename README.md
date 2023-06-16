@@ -8,19 +8,18 @@ A secure messaging system to send encrypted messages.
 </div>
 
 ## **How to Install and Run the Project** ##
-1. Clone the Repository
+1. Download the latest release as per your system
 2. Open 2 terminals
-3. From the 'src' directory in the cloned repository run the command `go build main.go messaging_app.go` in both terminals to build the project.
-4. Run `./main {#Sender Id} {#Sender's port number} {#Receiver's port number}` on the first terminal
-5. Run `./main {#Sender Id} {#Sender's port number} {#Receiver's port number}` on the second terminal
+3. Run `./sms {#Sender Id} {#Sender's port number} {#Receiver's port number}` on the first terminal
+4. Run `./sms {#Sender Id} {#Sender's port number} {#Receiver's port number}` on the second terminal
 
 **NOTE**: The sender's port number and receiver's port number in points 4 and 5 respectively should be the same. Similarly, the receiver's port number and sender's port number in points 4 and 5 respectively should be the same. 
-  Eg: Terminal 1 - ./main John 8080 8000
-      Terminal 2 - ./main Jane 8000 8080
+  Eg: Terminal 1 - ./sms John 8080 8000
+      Terminal 2 - ./sms Jane 8000 8080
 
-6. Initiate the Key exchange with the command `spk`
-7. Now you can start messaging on either terminal and see the message on the other peer's terminal.
-8. To quit the program you can use the command "quit"
+5. Initiate the Key exchange with the command `spk` on one of the terminals.
+6. Now you can start messaging on either terminal and see the message on the other peer's terminal.
+7. To quit the program you can use the command "quit"
 
 ## **Design Decisions for the code** ##
 I have broken the project into 3 primary tasks to maintain abstraction : 
