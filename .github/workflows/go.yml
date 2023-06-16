@@ -26,4 +26,5 @@ jobs:
       run: go build -v ./*.go
 
     - name: Test
+      working-directory: ./src
       run: go test 
